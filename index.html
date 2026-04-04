@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtualia — Automatización Inteligente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060608;
+  --bg2: #0d0d10;
+  --bg3: #13131a;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #f2f2f7;
+  --text2: rgba(242,242,247,0.55);
+  --text3: rgba(242,242,247,0.32);
+  --accent: #2563eb;
+  --accent-soft: rgba(37,99,235,0.12);
+  --font: 'Inter', -apple-system, sans-serif;
+  --r: 20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px}
+
+/* ── NAV ───────────────────────────────────────────── */
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;width:calc(100% - 3rem);max-width:1040px;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(13,13,18,0.82);backdrop-filter:blur(24px) saturate(180%);border:0.5px solid var(--border2);border-radius:16px}
+.nav-logo{font-size:15px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+.nav-logo span{color:var(--text2);font-weight:400}
+.nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none}
+.nav-links a{font-size:13.5px;font-weight:400;color:var(--text2);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{background:var(--accent)!important;color:#fff!important;padding:7px 18px;border-radius:980px;font-size:13px!important;font-weight:600!important;transition:opacity .2s,transform .15s!important}
+.nav-cta:hover{opacity:.85!important;transform:translateY(-1px)}
+.nav-mob{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:4px;padding:4px}
+.nav-mob span{display:block;width:20px;height:1.5px;background:var(--text2);border-radius:2px;transition:.3s}
+
+/* ── HERO ──────────────────────────────────────────── */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem clamp(1.5rem,5vw,4rem) 5rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(80px)}
+.orb1{width:640px;height:640px;background:radial-gradient(circle,#1d4ed8 0%,transparent 70%);top:-140px;left:50%;transform:translateX(-50%);opacity:.38}
+.orb2{width:380px;height:380px;background:radial-gradient(circle,#7c3aed 0%,transparent 70%);bottom:0;right:-80px;opacity:.18}
+.orb3{width:280px;height:280px;background:radial-gradient(circle,#0ea5e9 0%,transparent 70%);bottom:80px;left:-40px;opacity:.16}
+.grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 0%,transparent 80%)}
+.hero-inner{position:relative;z-index:1;max-width:860px;margin:0 auto}
+.pill{display:inline-flex;align-items:center;gap:8px;background:rgba(37,99,235,.15);border:0.5px solid rgba(59,130,246,.35);color:#93c5fd;padding:6px 16px;border-radius:980px;font-size:12.5px;font-weight:500;letter-spacing:.02em;margin-bottom:2.25rem;animation:fu .5s ease both .1s}
+.pill-dot{width:6px;height:6px;background:#60a5fa;border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+h1.h1{font-size:clamp(3rem,8.5vw,7rem);font-weight:800;letter-spacing:-.04em;line-height:1.02;color:var(--text);margin-bottom:1.5rem;animation:fu .55s ease both .2s}
+.grad{background:linear-gradient(90deg,#60a5fa 0%,#a78bfa 50%,#34d399 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--text2);max-width:560px;margin:0 auto 2.75rem;line-height:1.8;animation:fu .55s ease both .3s}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fu .55s ease both .4s}
+.btn-blue{background:var(--accent);color:#fff;padding:14px 28px;border-radius:980px;font-size:15px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 0 1px rgba(37,99,235,.5),0 8px 24px rgba(37,99,235,.4);transition:transform .15s,box-shadow .2s}
+.btn-blue:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(59,130,246,.6),0 12px 32px rgba(37,99,235,.5)}
+.btn-ghost{background:var(--surface);color:var(--text);padding:14px 28px;border-radius:980px;font-size:15px;font-weight:500;text-decoration:none;border:0.5px solid var(--border2);display:inline-flex;align-items:center;gap:8px;transition:background .2s,transform .15s}
+.btn-ghost:hover{background:var(--surface2);transform:translateY(-2px)}
+
+.hstats{display:flex;margin-top:4.5rem;border:0.5px solid var(--border2);border-radius:16px;background:rgba(255,255,255,.03);overflow:hidden;animation:fu .55s ease both .5s;width:fit-content;margin-inline:auto}
+.hs{padding:1.4rem 2.5rem;text-align:center;border-right:0.5px solid var(--border)}
+.hs:last-child{border-right:none}
+.hs-n{font-size:.95rem;font-weight:700;color:var(--text);display:block;line-height:1.35}
+.hs-l{font-size:11.5px;color:var(--text3);display:block;margin-top:5px;line-height:1.45}
+
+/* ── SECTION BASE ──────────────────────────────────── */
+section{padding:clamp(5rem,9vw,8rem) clamp(1.5rem,5vw,4rem)}
+.wrap{max-width:1100px;margin:0 auto}
+.s-lbl{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#60a5fa;display:block;margin-bottom:.75rem}
+h2.s-title{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-.035em;line-height:1.1;color:var(--text);margin-bottom:1rem}
+.s-sub{font-size:clamp(.95rem,1.5vw,1.1rem);color:var(--text2);max-width:500px;line-height:1.8}
+.s-header{margin-bottom:3.5rem}
+
+/* ── SERVICES BENTO ────────────────────────────────── */
+#servicios{background:var(--bg2)}
+.bento{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
+.bc{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--r);padding:2rem;display:flex;flex-direction:column;gap:.9rem;transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
+.bc::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(37,99,235,.05) 0%,transparent 60%);pointer-events:none}
+.bc:hover{border-color:rgba(59,130,246,.35);transform:translateY(-3px)}
+.bc.wide{grid-column:span 2}
+.bc.tall{grid-row:span 2}
+.bc.feat{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 60%,#2563eb 100%);border-color:rgba(96,165,250,.3)}
+.bc.feat:hover{border-color:rgba(147,197,253,.5)}
+.bc.feat .bc-title{color:#fff;font-size:20px}
+.bc.feat .bc-desc{color:rgba(255,255,255,.7);font-size:15px}
+.bc-ico{width:42px;height:42px;border-radius:11px;background:var(--accent-soft);border:0.5px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bc.feat .bc-ico{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.2)}
+.bc-ico svg{width:20px;height:20px;stroke:#60a5fa;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bc.feat .bc-ico svg{stroke:#fff}
+.bc-title{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.bc-desc{font-size:13.5px;color:var(--text2);line-height:1.65;flex:1}
+.bc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:.3rem}
+.btag{font-size:11px;font-weight:500;color:#93c5fd;background:rgba(37,99,235,.12);border:0.5px solid rgba(59,130,246,.2);padding:3px 10px;border-radius:980px}
+.bc.feat .btag{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff}
+.bc-bignum{font-size:4.5rem;font-weight:900;letter-spacing:-.05em;color:var(--text);line-height:1;margin-top:auto}
+.bc-bignum small{font-size:1.3rem;font-weight:600;color:var(--text2)}
+
+/* ── RESULTS ───────────────────────────────────────── */
+#resultados{background:var(--bg)}
+.results-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3.5rem}
+.results-copy p{font-size:clamp(.95rem,1.5vw,1.05rem);color:var(--text2);line-height:1.8;margin-bottom:2rem}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mc{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--r);padding:1.75rem;transition:border-color .2s,transform .2s}
+.mc:hover{border-color:rgba(255,255,255,.18);transform:translateY(-2px)}
+.mc.span2{grid-column:span 2;background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);border-color:rgba(59,130,246,.2);display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+.mc.blu{background:var(--accent);border-color:transparent}
+.mc.blu .mn,.mc.blu .ml{color:#fff}
+.mc.blu .ml{color:rgba(255,255,255,.7)}
+.mc.dark{background:#080810}
+.mn{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-.05em;color:var(--text);line-height:1;display:block}
+.ml{font-size:14px;color:var(--text2);margin-top:6px;display:block;line-height:1.5}
+.mq{font-size:1rem;color:var(--text);font-weight:500;line-height:1.7;font-style:italic}
+.mqa{font-size:12.5px;color:var(--text3);margin-top:.9rem;font-style:normal}
+
+/* ── PROCESS ───────────────────────────────────────── */
+#como-funciona{background:var(--bg2)}
+.prow{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;border-radius:var(--r);overflow:hidden;border:0.5px solid var(--border);margin-top:3.5rem}
+.ps{background:var(--bg3);padding:2rem 1.75rem;position:relative}
+.ps:not(:last-child)::after{content:'';position:absolute;top:25%;right:0;width:1px;height:50%;background:var(--border)}
+.ps-n{font-size:11px;font-weight:700;color:#60a5fa;letter-spacing:.1em;display:block;margin-bottom:1.25rem}
+.ps h3{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.015em;margin-bottom:.6rem}
+.ps p{font-size:13.5px;color:var(--text2);line-height:1.65}
+
+/* ── TESTIMONIALS ──────────────────────────────────── */
+#testimonios{background:var(--bg)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:3.5rem}
+.tc{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--r);padding:1.75rem;display:flex;flex-direction:column;gap:.9rem;transition:border-color .25s,transform .2s}
+.tc:hover{border-color:rgba(255,255,255,.16);transform:translateY(-2px)}
+.tc.big{grid-column:span 2;background:var(--bg2)}
+.tstars{display:flex;gap:3px}
+.ts{width:12px;height:12px;background:#f59e0b;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.ts.h{background:linear-gradient(90deg,#f59e0b 50%,#374151 50%)}
+.tq{font-size:14.5px;color:var(--text);line-height:1.72;flex:1}
+.tc.big .tq{font-size:17px;line-height:1.65;font-weight:500}
+.tauth{display:flex;align-items:center;gap:10px;padding-top:.75rem;border-top:0.5px solid var(--border)}
+.tav{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);border:0.5px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#93c5fd;flex-shrink:0}
+.tn{font-size:13px;font-weight:600;color:var(--text)}
+.tr{font-size:12px;color:var(--text3)}
+
+/* ── CTA BAND ──────────────────────────────────────── */
+.ctaband{padding:clamp(5rem,9vw,8rem) clamp(1.5rem,5vw,4rem);text-align:center;position:relative;overflow:hidden;background:var(--bg2)}
+.ctaorb{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.ctaband h2{font-size:clamp(2rem,5vw,4rem);font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1.1;margin-bottom:1rem;position:relative;z-index:1;max-width:700px;margin-inline:auto}
+.ctaband p{font-size:clamp(.95rem,1.5vw,1.1rem);color:var(--text2);margin-bottom:2.5rem;max-width:440px;margin-inline:auto;line-height:1.8;position:relative;z-index:1}
+.ctabtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+/* ── CONTACT ───────────────────────────────────────── */
+#contacto{background:var(--bg)}
+.crow{display:flex;gap:14px;flex-wrap:wrap;margin-top:2.5rem}
+.cl{flex:1;min-width:200px;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--r);padding:1.6rem 1.75rem;display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);transition:border-color .2s,transform .2s}
+.cl:hover{border-color:rgba(255,255,255,.22);transform:translateY(-2px)}
+.cl-ico{width:42px;height:42px;border-radius:11px;background:var(--accent-soft);border:0.5px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cl-ico svg{width:19px;height:19px;stroke:#60a5fa;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cl-l{font-size:12px;color:var(--text3)}
+.cl-v{font-size:15px;font-weight:600;color:var(--text)}
+
+/* ── FOOTER ────────────────────────────────────────── */
+footer{border-top:0.5px solid var(--border);padding:2rem clamp(1.5rem,5vw,4rem);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;background:var(--bg)}
+.flogo{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.02em;text-decoration:none}
+.flogo span{color:var(--text2);font-weight:400}
+footer p{font-size:12.5px;color:var(--text3)}
+
+/* ── ANIMATIONS ────────────────────────────────────── */
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}.rv.d4{transition-delay:.4s}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ── RESPONSIVE ────────────────────────────────────── */
+@media(max-width:960px){
+  .results-wrap{grid-template-columns:1fr}
+  .mc.span2{grid-template-columns:1fr}
+}
+@media(max-width:860px){
+  .bento{grid-template-columns:1fr 1fr}
+  .bc.wide{grid-column:span 2}
+  .bc.tall{grid-row:auto}
+  .prow{grid-template-columns:1fr 1fr}
+  .ps:nth-child(2)::after{display:none}
+  .tgrid{grid-template-columns:1fr 1fr}
+  .tc.big{grid-column:span 2}
+}
+@media(max-width:600px){
+  nav{width:calc(100% - 2rem)}
+  .nav-links{display:none}
+  .nav-mob{display:flex}
+  .hstats{flex-direction:column;width:100%}
+  .hs{border-right:none;border-bottom:0.5px solid var(--border)}
+  .hs:last-child{border-bottom:none}
+  .bento{grid-template-columns:1fr}
+  .bc.wide{grid-column:span 1}
+  .prow{grid-template-columns:1fr}
+  .ps::after{display:none!important}
+  .tgrid{grid-template-columns:1fr}
+  .tc.big{grid-column:span 1}
+  .metric-grid{grid-template-columns:1fr}
+  .mc.span2{grid-column:span 1;grid-template-columns:1fr}
+  footer{justify-content:center;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="#">Virtualia<span> Automation</span></a>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#resultados">Resultados</a></li>
+    <li><a href="#como-funciona">Proceso</a></li>
+    <li><a href="#testimonios">Clientes</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="https://wa.me/34640364971?text=Hola%2C%20me%20gustar%C3%ADa%20agendar%20una%20demo" class="nav-cta">Agendar demo</a></li>
+  </ul>
+  <button class="nav-mob" aria-label="Menú" onclick="toggleNav(this)">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="grid-lines"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="pill"><div class="pill-dot"></div>Automatización con inteligencia artificial</div>
+    <h1 class="h1">
+      Tu negocio trabaja.
+      <span class="grad">Aunque tú no estés.</span>
+    </h1>
+    <p class="hero-sub">Ayudamos a empresas de todos los tamaños a ahorrar tiempo y dinero automatizando los procesos que frenan su crecimiento.</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/34640364971?text=Hola%2C%20me%20gustar%C3%ADa%20agendar%20una%20demo" class="btn-blue">
+        Agendar demo gratis
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#servicios" class="btn-ghost">Ver servicios</a>
+    </div>
+    <div class="hstats">
+      <div class="hs">
+        <span class="hs-n">Ahorra tiempo</span>
+        <span class="hs-l">Céntrate en lo que realmente<br>hace crecer tu negocio</span>
+      </div>
+      <div class="hs">
+        <span class="hs-n">Gana más clientes</span>
+        <span class="hs-l">Ninguna llamada, mensaje<br>o lead sin atender</span>
+      </div>
+      <div class="hs">
+        <span class="hs-n">Reduce costes</span>
+        <span class="hs-l">Automatiza tareas que hoy<br>te cuestan tiempo y dinero</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="servicios">
+  <div class="wrap">
+    <div class="s-header rv">
+      <span class="s-lbl">Servicios</span>
+      <h2 class="s-title">Todo lo que automatizamos<br>para tu negocio</h2>
+      <p class="s-sub">Desde atender llamadas hasta cerrar facturas — si es un proceso repetitivo, lo automatizamos.</p>
+    </div>
+    <div class="bento">
+
+      <!-- FEATURED: Agentes de Voz -->
+      <div class="bc feat wide rv d1">
+        <div class="bc-ico">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.4 1.13 2 2 0 012.38.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+        </div>
+        <div class="bc-title">Agentes de Voz con IA</div>
+        <p class="bc-desc">Atienden tus llamadas entrantes las 24 horas, los 7 días. Agendan citas en Google Calendar, registran cada interacción en el CRM y tratan a cada cliente como si siempre hubiera alguien disponible. Nunca más pierdas un lead por no coger el teléfono.</p>
+        <div class="bc-tags">
+          <span class="btag">Google Calendar</span>
+          <span class="btag">CRM integrado</span>
+          <span class="btag">24/7</span>
+          <span class="btag">España & USA</span>
+        </div>
+      </div>
+
+      <!-- TALL: WhatsApp -->
+      <div class="bc tall rv d2" style="justify-content:space-between">
+        <div>
+          <div class="bc-ico">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="bc-title" style="margin-top:.9rem">Agente de WhatsApp</div>
+          <p class="bc-desc">Responde, agenda citas y resuelve dudas automáticamente. Cada contacto queda en el CRM. Tus clientes piensan que tienes una recepcionista 24h.</p>
+        </div>
+        <div>
+          <div class="bc-bignum">100%<br><small>atendido</small></div>
+          <div class="bc-tags" style="margin-top:1rem">
+            <span class="btag">CRM</span>
+            <span class="btag">IA conversacional</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emails -->
+      <div class="bc rv d1">
+        <div class="bc-ico">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="bc-title">Automatización de Emails</div>
+        <p class="bc-desc">Respuestas automáticas, seguimientos programados y clasificación inteligente. Tu bandeja trabaja sola — tú solo gestionas lo que realmente importa.</p>
+        <div class="bc-tags"><span class="btag">Respuestas auto</span><span class="btag">Seguimientos</span><span class="btag">Clasificación IA</span></div>
+      </div>
+
+      <!-- Facturas -->
+      <div class="bc rv d2">
+        <div class="bc-ico">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="bc-title">Automatización de Facturas</div>
+        <p class="bc-desc">Genera, envía y hace seguimiento de facturas de forma automática. Sin trabajo manual, sin olvidos, sin retrasos en los cobros.</p>
+        <div class="bc-tags"><span class="btag">Envío automático</span><span class="btag">Seguimiento de cobros</span></div>
+      </div>
+
+      <!-- Chatbot -->
+      <div class="bc rv d3">
+        <div class="bc-ico">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="bc-title">Chatbot para Web</div>
+        <p class="bc-desc">Capta leads, responde FAQs y convierte visitas en clientes mientras duermes. Integrado en cualquier web en minutos.</p>
+        <div class="bc-tags"><span class="btag">Captura leads</span><span class="btag">FAQ automático</span></div>
+      </div>
+
+      <!-- Marketing IA -->
+      <div class="bc wide rv d1">
+        <div class="bc-ico">
+          <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="bc-title" style="font-size:18px">Agentes de Marketing con IA</div>
+        <p class="bc-desc" style="max-width:560px">Campañas, seguimientos y nurturing completamente automatizados. Tu estrategia de marketing trabajando sola — captando leads, cualificándolos y convirtiéndolos en clientes sin que muevas un dedo.</p>
+        <div class="bc-tags"><span class="btag">Campañas auto</span><span class="btag">Nurturing IA</span><span class="btag">Lead scoring</span><span class="btag">Multi-canal</span></div>
+      </div>
+
+      <!-- A medida -->
+      <div class="bc rv d2">
+        <div class="bc-ico">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg>
+        </div>
+        <div class="bc-title">Automatizaciones a Medida</div>
+        <p class="bc-desc">¿Tienes un proceso que repites cada día? Lo analizamos y lo automatizamos. Cualquier flujo, cualquier industria, cualquier tamaño de empresa.</p>
+        <div class="bc-tags"><span class="btag">A medida</span><span class="btag">Cualquier proceso</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── RESULTS ── -->
+<section id="resultados">
+  <div class="wrap">
+    <div class="rv">
+      <span class="s-lbl">Resultados reales</span>
+      <h2 class="s-title">Números que no<br>necesitan explicación</h2>
+    </div>
+    <div class="results-wrap">
+      <div class="results-copy rv d1">
+        <p>Nuestros clientes recuperan horas de trabajo cada semana desde el primer mes. No vendemos promesas — entregamos automatizaciones que funcionan en dos semanas o menos.</p>
+        <p>Desde clínicas dentales hasta distribuidoras industriales, el resultado siempre es el mismo: más tiempo, más clientes atendidos y menos costes operativos.</p>
+        <a href="https://wa.me/34640364971?text=Hola%2C%20me%20gustar%C3%ADa%20agendar%20una%20demo" class="btn-blue">Quiero estos resultados</a>
+      </div>
+      <div class="metric-grid rv d2">
+        <div class="mc span2">
+          <div>
+            <span class="mn">+40h</span>
+            <span class="ml">recuperadas al mes por negocio,<br>de media, desde el primer mes</span>
+          </div>
+          <div>
+            <p class="mq">"En dos semanas lo tenían todo listo y funcionando. Los procesos que me llevaban horas ahora se hacen solos."</p>
+            <p class="mqa">Pablo F. — Taller mecánico, Barcelona</p>
+          </div>
+        </div>
+        <div class="mc blu">
+          <span class="mn">0%</span>
+          <span class="ml">llamadas perdidas con agente de voz activo</span>
+        </div>
+        <div class="mc dark">
+          <span class="mn">2 sem</span>
+          <span class="ml">de consulta a automatización en marcha</span>
+        </div>
+        <div class="mc">
+          <span class="mn">24/7</span>
+          <span class="ml">tu negocio operando sin intervención humana</span>
+        </div>
+        <div class="mc">
+          <span class="mn">100%</span>
+          <span class="ml">de clientes atendidos al instante, siempre</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESS ── -->
+<section id="como-funciona">
+  <div class="wrap">
+    <div class="rv">
+      <span class="s-lbl">Proceso</span>
+      <h2 class="s-title">De cero a automatizado<br>en cuatro pasos</h2>
+      <p class="s-sub">Sin complicaciones técnicas de tu parte. Nosotros lo hacemos todo.</p>
+    </div>
+    <div class="prow rv d1">
+      <div class="ps">
+        <span class="ps-n">01 — ANÁLISIS</span>
+        <h3>Entendemos tu negocio</h3>
+        <p>Mapeamos los procesos que más tiempo consumen y las oportunidades con mayor impacto para tu empresa.</p>
+      </div>
+      <div class="ps">
+        <span class="ps-n">02 — DISEÑO</span>
+        <h3>Diseñamos la solución</h3>
+        <p>Integraciones, flujos y respuestas personalizadas a tu negocio, tu tono y tu industria. Nada genérico.</p>
+      </div>
+      <div class="ps">
+        <span class="ps-n">03 — ACTIVACIÓN</span>
+        <h3>Lo ponemos en marcha</h3>
+        <p>En menos de dos semanas. Sin que tengas que hacer nada técnico — nosotros nos encargamos de todo.</p>
+      </div>
+      <div class="ps">
+        <span class="ps-n">04 — SOPORTE</span>
+        <h3>Seguimos contigo</h3>
+        <p>Monitorizamos, ajustamos y mejoramos continuamente para que tus automatizaciones siempre rindan al máximo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonios">
+  <div class="wrap">
+    <div class="rv">
+      <span class="s-lbl">Clientes</span>
+      <h2 class="s-title">Negocios reales que ya<br>trabajan menos y crecen más</h2>
+    </div>
+    <div class="tgrid">
+
+      <div class="tc big rv d1">
+        <div class="tstars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div></div>
+        <p class="tq">"El agente de WhatsApp atiende consultas, agenda visitas y envía presupuestos. Mis clientes piensan que tengo una recepcionista 24 horas. Es una automatización."</p>
+        <div class="tauth">
+          <div class="tav">AG</div>
+          <div><div class="tn">Ana G.</div><div class="tr">Inmobiliaria, Málaga</div></div>
+        </div>
+      </div>
+
+      <div class="tc rv d2">
+        <div class="tstars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div></div>
+        <p class="tq">"Antes perdía 4 o 5 llamadas al día. Desde que tenemos el agente de voz, no se nos escapa ni una. Las citas han aumentado notablemente."</p>
+        <div class="tauth">
+          <div class="tav">LM</div>
+          <div><div class="tn">Laura M.</div><div class="tr">Clínica dental, Valencia</div></div>
+        </div>
+      </div>
+
+      <div class="tc rv d1">
+        <div class="tstars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts h"></div></div>
+        <p class="tq">"El email era un caos total. Ahora el sistema clasifica, responde y escala solo lo urgente. Hemos recuperado muchísimas horas cada semana."</p>
+        <div class="tauth">
+          <div class="tav">JR</div>
+          <div><div class="tn">Javier R.</div><div class="tr">Distribuidora, Madrid</div></div>
+        </div>
+      </div>
+
+      <div class="tc rv d2">
+        <div class="tstars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div></div>
+        <p class="tq">"En dos semanas lo tenían todo listo. La facturación y los seguimientos ahora se hacen solos. Profesionales de verdad."</p>
+        <div class="tauth">
+          <div class="tav">PF</div>
+          <div><div class="tn">Pablo F.</div><div class="tr">Taller mecánico, Barcelona</div></div>
+        </div>
+      </div>
+
+      <div class="tc rv d3">
+        <div class="tstars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts h"></div></div>
+        <p class="tq">"El teléfono sonaba sin parar para pedir cita. Ahora el agente de voz agenda solo en Google Calendar. Trabajamos mucho más tranquilas."</p>
+        <div class="tauth">
+          <div class="tav">MV</div>
+          <div><div class="tn">Marta V.</div><div class="tr">Peluquería, Sevilla</div></div>
+        </div>
+      </div>
+
+      <div class="tc rv d1">
+        <div class="tstars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div></div>
+        <p class="tq">"Las clientas reservan directamente desde el chat. Tratamientos, precios, disponibilidad — todo lo resuelve el agente solo."</p>
+        <div class="tauth">
+          <div class="tav">CR</div>
+          <div><div class="tn">Carmen R.</div><div class="tr">Salón de belleza, Zaragoza</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA FINAL ── -->
+<div class="ctaband">
+  <div class="ctaorb"></div>
+  <h2>¿Listo para que tu negocio<br>funcione solo?</h2>
+  <p>Cuéntanos qué proceso te quita más tiempo y te mostramos cómo automatizarlo — sin compromiso.</p>
+  <div class="ctabtns">
+    <a href="https://wa.me/34640364971?text=Hola%2C%20me%20gustar%C3%ADa%20agendar%20una%20demo" class="btn-blue">
+      Agendar demo gratis
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="mailto:emanuel@virtualia.io" class="btn-ghost">Enviar un email</a>
+  </div>
+</div>
+
+<!-- ── CONTACT ── -->
+<section id="contacto">
+  <div class="wrap">
+    <div class="rv">
+      <span class="s-lbl">Contacto</span>
+      <h2 class="s-title">Hablemos</h2>
+      <p class="s-sub">Elige el canal que prefieras. Respondemos rápido.</p>
+    </div>
+    <div class="crow">
+      <a href="mailto:emanuel@virtualia.io" class="cl rv d1">
+        <div class="cl-ico">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div><div class="cl-l">Email</div><div class="cl-v">emanuel@virtualia.io</div></div>
+      </a>
+      <a href="tel:+34640364971" class="cl rv d2">
+        <div class="cl-ico">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.4 1.13 2 2 0 012.38.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+        </div>
+        <div><div class="cl-l">Teléfono</div><div class="cl-v">+34 640 364 971</div></div>
+      </a>
+      <a href="https://wa.me/34640364971?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20vuestras%20automatizaciones" class="cl rv d3">
+        <div class="cl-ico">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div><div class="cl-l">WhatsApp</div><div class="cl-v">Escríbenos ahora</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<!-- ── FOOTER ── -->
+<footer>
+  <a class="flogo" href="#">Virtualia<span> Automation</span></a>
+  <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+    <p>© 2026 Virtualia Automation.</p>
+    <button onclick="openLegal('aviso')" class="lbtn">Aviso Legal</button>
+    <button onclick="openLegal('privacidad')" class="lbtn">Privacidad</button>
+    <button onclick="openLegal('cookies')" class="lbtn">Cookies</button>
+  </div>
+</footer>
+
+<!-- ── LEGAL OVERLAY ── -->
+<div id="legal-overlay" onclick="closeLegal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);z-index:400"></div>
+<div id="legal-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:401;width:min(760px,calc(100vw - 2rem));max-height:85vh;background:#0d0d10;border:0.5px solid rgba(255,255,255,0.14);border-radius:20px;overflow:hidden;flex-direction:column">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.75rem;border-bottom:0.5px solid rgba(255,255,255,0.08);flex-shrink:0">
+    <span id="modal-title" style="font-size:16px;font-weight:700;color:#f2f2f7;letter-spacing:-.02em"></span>
+    <button onclick="closeLegal()" style="background:rgba(255,255,255,.07);border:0.5px solid rgba(255,255,255,.12);color:rgba(242,242,247,.6);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;line-height:1;font-family:inherit;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.14)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">✕</button>
+  </div>
+  <div id="modal-body" style="overflow-y:auto;padding:2rem 1.75rem 2.5rem;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent"></div>
+</div>
+
+<style>
+.lbtn{background:none;border:none;font-size:12.5px;color:rgba(242,242,247,0.32);cursor:pointer;font-family:inherit;padding:0;transition:color .2s}
+.lbtn:hover{color:rgba(242,242,247,.6)}
+.lc h2{font-size:1rem;font-weight:700;color:#f2f2f7;margin:2rem 0 .6rem;padding-top:.5rem;border-top:0.5px solid rgba(255,255,255,.06)}
+.lc h2:first-child{margin-top:0;border-top:none;padding-top:0}
+.lc p{font-size:.9rem;color:rgba(242,242,247,.55);line-height:1.8;margin-bottom:.8rem}
+.lc ul{margin:.4rem 0 .9rem 1.2rem}
+.lc li{font-size:.9rem;color:rgba(242,242,247,.55);line-height:1.8;margin-bottom:.3rem}
+.lc a{color:#60a5fa;text-decoration:none}.lc a:hover{text-decoration:underline}
+.lc strong{color:rgba(242,242,247,.8)}
+.lc .resp{font-size:11px;color:rgba(242,242,247,.28);line-height:1.9;background:rgba(255,255,255,.03);border:0.5px solid rgba(255,255,255,.07);border-radius:8px;padding:.75rem 1rem;margin:.75rem 0}
+.lc .note{background:rgba(37,99,235,.08);border:0.5px solid rgba(59,130,246,.2);border-radius:10px;padding:.9rem 1.1rem;margin:1rem 0;font-size:.875rem;color:rgba(242,242,247,.55);line-height:1.7}
+.lc .tbl{overflow-x:auto;margin:.75rem 0 1rem;border-radius:10px;border:0.5px solid rgba(255,255,255,.08)}
+.lc table{width:100%;border-collapse:collapse;font-size:.82rem}
+.lc th{background:rgba(255,255,255,.04);color:rgba(242,242,247,.7);font-weight:600;padding:.6rem .9rem;text-align:left;border-bottom:0.5px solid rgba(255,255,255,.1)}
+.lc td{padding:.6rem .9rem;color:rgba(242,242,247,.5);border-bottom:0.5px solid rgba(255,255,255,.05);vertical-align:top}
+.lc tr:last-child td{border-bottom:none}
+.lc .bt{display:inline-block;font-size:10.5px;font-weight:500;padding:2px 8px;border-radius:980px;border:0.5px solid}
+.lc .bt-t{color:#34d399;background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.2)}
+.lc .bt-a{color:#60a5fa;background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.2)}
+.lc .bt-p{color:#f59e0b;background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.2)}
+</style>
+
+<!-- ── COOKIE BANNER ── -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:300;width:calc(100% - 3rem);max-width:680px;background:rgba(19,19,26,0.96);backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.14);border-radius:16px;padding:1.25rem 1.5rem;flex-wrap:wrap;align-items:center;gap:1.25rem;box-shadow:0 8px 40px rgba(0,0,0,0.5)">
+  <svg style="flex-shrink:0;opacity:.6" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2f2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1" fill="#f2f2f7"/><circle cx="7" cy="9" r="1" fill="#f2f2f7"/><circle cx="16" cy="15" r="1" fill="#f2f2f7"/><circle cx="8" cy="15" r="1" fill="#f2f2f7"/><circle cx="15" cy="8" r="1" fill="#f2f2f7"/></svg>
+  <p style="flex:1;font-size:13.5px;color:rgba(242,242,247,0.65);line-height:1.6;margin:0">Usamos cookies propias y de terceros para mejorar tu experiencia y analizar el tráfico. <button onclick="openLegal('cookies')" style="background:none;border:none;color:#60a5fa;font-size:13.5px;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline">Más información</button>.</p>
+  <div style="display:flex;gap:8px;flex-shrink:0">
+    <button onclick="setCookies(false)" style="background:transparent;border:0.5px solid rgba(255,255,255,0.18);color:rgba(242,242,247,0.6);padding:8px 16px;border-radius:980px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit" onmouseover="this.style.borderColor='rgba(255,255,255,.35)';this.style.color='rgba(242,242,247,.9)'" onmouseout="this.style.borderColor='rgba(255,255,255,.18)';this.style.color='rgba(242,242,247,.6)'">Rechazar</button>
+    <button onclick="setCookies(true)" style="background:#2563eb;border:none;color:#fff;padding:8px 18px;border-radius:980px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Aceptar</button>
+  </div>
+</div>
+
+<script>
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}
+}),{threshold:.1});
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+function toggleNav(btn) {
+  const ul = document.querySelector('.nav-links');
+  const open = ul.style.display === 'flex';
+  ul.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:fixed;top:80px;left:1rem;right:1rem;background:rgba(13,13,18,.97);backdrop-filter:blur(24px);padding:1.5rem;gap:1.25rem;border-radius:16px;border:0.5px solid rgba(255,255,255,.12);z-index:199';
+  const s = btn.querySelectorAll('span');
+  s[0].style.transform = open ? '' : 'translateY(5.5px) rotate(45deg)';
+  s[1].style.opacity = open ? '' : '0';
+  s[2].style.transform = open ? '' : 'translateY(-5.5px) rotate(-45deg)';
+}
+
+function setCookies(accepted) {
+  localStorage.setItem('cookie_consent', accepted ? 'accepted' : 'rejected');
+  const b = document.getElementById('cookie-banner');
+  b.style.opacity = '0'; b.style.transform = 'translateX(-50%) translateY(12px)';
+  b.style.transition = 'opacity .3s ease, transform .3s ease';
+  setTimeout(() => b.style.display = 'none', 300);
+}
+
+(function() {
+  if (!localStorage.getItem('cookie_consent')) {
+    const b = document.getElementById('cookie-banner');
+    b.style.display = 'flex'; b.style.opacity = '0';
+    b.style.transform = 'translateX(-50%) translateY(12px)';
+    b.style.transition = 'opacity .4s ease .8s, transform .4s ease .8s';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      b.style.opacity = '1'; b.style.transform = 'translateX(-50%) translateY(0)';
+    }));
+  }
+})();
+
+const LC = {
+  aviso: { title: 'Aviso Legal', html: `<div class="lc"><h2>1. Titular del sitio web</h2><p>En cumplimiento del artículo 10 de la Ley 34/2002 de Servicios de la Sociedad de la Información (LSSICE):</p><div class="resp">Titular: Malena Zingoni &nbsp;·&nbsp; NIF: X2246198H<br>Domicilio fiscal: Madrid, España<br>Contacto: <a href="mailto:emanuel@virtualia.io">emanuel@virtualia.io</a></div><h2>2. Objeto y ámbito</h2><p>El presente Aviso Legal regula el acceso y uso del sitio web <strong>virtualia.io</strong>, cuyo objeto es la prestación de servicios de información y automatización empresarial. El acceso implica la aceptación de estas condiciones.</p><h2>3. Propiedad intelectual</h2><p>Todos los contenidos del sitio —textos, imágenes, logotipos, código fuente y diseño— son propiedad de Virtualia Automation o de terceros que han autorizado su uso, y están protegidos por la legislación española e internacional sobre propiedad intelectual. Queda expresamente prohibida su reproducción, distribución o comunicación pública sin autorización previa y por escrito.</p><h2>4. Condiciones de uso</h2><p>El usuario se compromete a hacer un uso lícito del sitio. Queda prohibido:</p><ul><li>Utilizar el sitio para actividades ilícitas o fraudulentas.</li><li>Reproducir o explotar comercialmente los contenidos sin autorización.</li><li>Introducir virus o código dañino de cualquier tipo.</li><li>Recopilar datos de otros usuarios sin su consentimiento.</li></ul><h2>5. Exclusión de responsabilidad</h2><p>Virtualia Automation no garantiza la disponibilidad continua del sitio ni se responsabiliza de daños derivados de interrupciones o errores técnicos. Los contenidos son meramente informativos. El sitio puede contener enlaces a páginas de terceros sobre las que Virtualia Automation no tiene control ni responsabilidad.</p><h2>6. Legislación aplicable</h2><p>Estas condiciones se rigen por la legislación española. Para cualquier controversia, las partes se someten a los Juzgados y Tribunales de Madrid.</p></div>` },
+  privacidad: { title: 'Política de Privacidad', html: `<div class="lc"><h2>1. Responsable del tratamiento</h2><div class="resp">Responsable: Malena Zingoni &nbsp;·&nbsp; NIF: X2246198H<br>Domicilio: Madrid, España<br>Contacto: <a href="mailto:emanuel@virtualia.io">emanuel@virtualia.io</a> &nbsp;·&nbsp; virtualia.io</div><h2>2. ¿Qué datos recogemos?</h2><p>El sitio web de Virtualia <strong>no dispone de formularios</strong> que recojan datos personales directamente. Los únicos datos que podemos recibir son los que nos facilitas voluntariamente al contactarnos:</p><ul><li><strong>Email:</strong> nombre y dirección de correo incluidos en tu mensaje.</li><li><strong>WhatsApp / teléfono:</strong> número y contenido de la conversación.</li></ul><p>Los servicios de publicidad y analítica de terceros (Google, Meta) pueden recoger datos de navegación si aceptas las cookies.</p><h2>3. Finalidad y base legal</h2><div class="note"><strong>Atender tu consulta</strong> — Tratamos los datos que nos envías para responderte y gestionar la relación comercial. Base legal: interés legítimo (art. 6.1.f RGPD) y ejecución de contrato (art. 6.1.b RGPD).</div><div class="note"><strong>Publicidad y analítica</strong> — Solo si aceptas cookies. Google y Meta pueden tratar datos de navegación para mostrarte anuncios relevantes. Base legal: consentimiento (art. 6.1.a RGPD).</div><h2>4. ¿Con quién compartimos tus datos?</h2><p>No cedemos ni vendemos datos a terceros, salvo:</p><ul><li><strong>Google LLC</strong> — analítica y publicidad (Google Analytics, Google Ads).</li><li><strong>Meta Platforms Ireland Ltd.</strong> — publicidad (Facebook Ads, Instagram Ads).</li><li><strong>Proveedores técnicos</strong> necesarios para el funcionamiento del sitio.</li><li><strong>Obligaciones legales</strong> cuando sea requerido por autoridad competente.</li></ul><p>Las transferencias internacionales a Google y Meta se realizan al amparo de cláusulas contractuales tipo aprobadas por la Comisión Europea.</p><h2>5. Conservación de datos</h2><p>Los datos de contacto se conservan el tiempo necesario para atender la solicitud y, si existe relación comercial, durante el plazo legalmente exigido (generalmente 5-6 años por obligaciones fiscales y mercantiles).</p><h2>6. Tus derechos</h2><p>En virtud del RGPD y la LOPDGDD tienes derecho a: <strong>acceso, rectificación, supresión, oposición, limitación y portabilidad</strong> de tus datos, así como a <strong>retirar el consentimiento</strong> en cualquier momento sin que ello afecte a la licitud del tratamiento previo.</p><p>Para ejercer estos derechos, escríbenos a <a href="mailto:emanuel@virtualia.io">emanuel@virtualia.io</a>. También puedes reclamar ante la <strong>Agencia Española de Protección de Datos</strong> en <a href="https://www.aepd.es" target="_blank">aepd.es</a>.</p><h2>7. Seguridad</h2><p>Aplicamos medidas técnicas y organizativas adecuadas para proteger tus datos frente a accesos no autorizados, pérdida o alteración, conforme al RGPD.</p></div>` },
+  cookies: { title: 'Política de Cookies', html: `<div class="lc"><h2>1. ¿Qué son las cookies?</h2><p>Las cookies son pequeños archivos de texto que los sitios web almacenan en tu dispositivo. Sirven para que el sitio funcione correctamente, recordar preferencias y, en su caso, mostrar publicidad relevante.</p><h2>2. Cookies que utilizamos</h2><div class="tbl"><table><thead><tr><th>Cookie</th><th>Proveedor</th><th>Para qué sirve</th><th>Tipo</th><th>Duración</th></tr></thead><tbody><tr><td>Preferencia de cookies</td><td>Virtualia</td><td>Recuerda si aceptaste o rechazaste las cookies</td><td><span class="bt bt-t">Técnica</span></td><td>1 año</td></tr><tr><td>Analítica de visitas</td><td>Google Analytics</td><td>Cuenta cuántas personas visitan la web y qué páginas ven</td><td><span class="bt bt-a">Analítica</span></td><td>2 años</td></tr><tr><td>Seguimiento de anuncios</td><td>Google Ads</td><td>Sabe si llegaste a la web desde uno de nuestros anuncios de Google</td><td><span class="bt bt-p">Publicidad</span></td><td>90 días</td></tr><tr><td>Publicidad de Meta</td><td>Facebook / Instagram</td><td>Permite mostrarte anuncios en Facebook e Instagram y medir su efectividad</td><td><span class="bt bt-p">Publicidad</span></td><td>90 días</td></tr></tbody></table></div><h2>3. Cookies de terceros</h2><p>Algunos servicios instalan sus propias cookies. Consulta sus políticas:</p><ul><li><strong>Google LLC</strong> — <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></li><li><strong>Meta Platforms Ireland Ltd.</strong> — <a href="https://www.facebook.com/privacy/policy" target="_blank">facebook.com/privacy/policy</a></li></ul><h2>4. Cómo gestionar las cookies</h2><p>Puedes retirar tu consentimiento en cualquier momento desde el banner de cookies. También puedes configurar tu navegador:</p><ul><li><a href="https://support.google.com/chrome/answer/95647" target="_blank">Google Chrome</a></li><li><a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" target="_blank">Mozilla Firefox</a></li><li><a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank">Safari</a></li><li><a href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank">Microsoft Edge</a></li></ul><div class="note"><strong>Opt-out publicitario:</strong> Desactiva la publicidad personalizada de Google en <a href="https://adssettings.google.com" target="_blank">adssettings.google.com</a> y la de Meta en <a href="https://www.facebook.com/ads/preferences" target="_blank">facebook.com/ads/preferences</a>.</div><h2>5. Base legal</h2><p>Las cookies no técnicas se basan en tu <strong>consentimiento</strong> (art. 6.1.a RGPD), retirable en cualquier momento. Las cookies técnicas son necesarias para el funcionamiento del sitio y no requieren consentimiento.</p><h2>6. Contacto</h2><p>Para cualquier consulta: <a href="mailto:emanuel@virtualia.io">emanuel@virtualia.io</a></p></div>` }
+};
+
+function openLegal(section) {
+  const d = LC[section];
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('modal-body').innerHTML = d.html;
+  const ov = document.getElementById('legal-overlay');
+  const mo = document.getElementById('legal-modal');
+  ov.style.display = 'block';
+  mo.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);z-index:401;width:min(760px,calc(100vw - 2rem));max-height:85vh;background:#0d0d10;border:0.5px solid rgba(255,255,255,0.14);border-radius:20px;overflow:hidden;opacity:0;transition:opacity .25s ease,transform .25s ease';
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    mo.style.opacity = '1'; mo.style.transform = 'translate(-50%,-50%)';
+  }));
+}
+
+function closeLegal() {
+  const mo = document.getElementById('legal-modal');
+  mo.style.opacity = '0'; mo.style.transform = 'translate(-50%,-48%)';
+  setTimeout(() => {
+    document.getElementById('legal-overlay').style.display = 'none';
+    mo.style.display = 'none';
+    document.body.style.overflow = '';
+  }, 220);
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLegal(); });
+</script>
+</body>
+</html>
